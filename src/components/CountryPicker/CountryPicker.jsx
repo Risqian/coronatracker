@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { NativeSelect, FormControl } from '@material-ui/core';
+import { FormControl, Grid, InputLabel, MenuItem, Select } from '@material-ui/core';
+
+import { makeStyles } from '@material-ui/core/styles';
 
 import styles from './CountryPicker.module.css'
 
 import { fetchCountries } from '../../api';
 
+const useStyles = makeStyles((theme) => ({
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 300,
+    },
+  }));
+
 const CountryPicker = ({ handleCountryChange }) => {
+    
+  const classes = useStyles();
 
     const [fetchedCountries, setFetchedCountries] = useState([]);
 
@@ -17,16 +28,19 @@ const CountryPicker = ({ handleCountryChange }) => {
         fetchAPI();
     }, [setFetchedCountries]);
 
-    console.log(fetchedCountries);
-
 
     return (
-        <FormControl className={styles.formControl}>
-            <NativeSelect defaultValue="" onChange={(e) => handleCountryChange(e.target.value)} >
-                <option value="global">Global</option>
-                {fetchedCountries.map((country, i) => <option key={i} value={country}> {country} </option>)}
-            </NativeSelect>
-        </FormControl>
+        <div className={styles.container}>
+            <Grid container justify='center'>
+                <FormControl className={classes.formControl}>
+                    <InputLabel>Negara</InputLabel>
+                    <Select defaultValue="global" onChange={(e) => handleCountryChange(e.target.value)} >
+                        <MenuItem value="global">Global</MenuItem>
+                        {fetchedCountries.map((country, i) => <MenuItem key={i} value={country}> {country} </MenuItem>)}
+                    </Select>
+                </FormControl>
+            </Grid>
+        </div>
     )
 }
 

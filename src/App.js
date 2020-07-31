@@ -4,6 +4,8 @@ import React, { Component } from 'react';
 import { Cards, Chart, CountryPicker } from './components';
 import styles from './App.module.css';
 
+import { Grid, Typography } from '@material-ui/core';
+
 import { fetchData } from './api';
 
 class App extends Component {
@@ -22,22 +24,45 @@ class App extends Component {
   }
 
   handleCountryChange = async (country) => {
-    const fetchedData = await fetchData(country);
+    if (country === "global") {
+      const fetchedData = await fetchData();
+      this.setState({
+        data: fetchedData,
+        country: ""
+      })
+    } else {
+      const fetchedData = await fetchData(country);
+      this.setState({
+        data: fetchedData,
+        country: country
+      })
+    }
 
-    this.setState({
-      data: fetchedData,
-      country: country
-    })
+
   }
 
   render() {
+    console.log(this.state.country)
 
     const { data, country } = this.state
     return (
       <div className={styles.container}>
-        <Cards data={data} />
-        <CountryPicker handleCountryChange={this.handleCountryChange} />
-        <Chart data={data} country={country} />
+        <Typography variant="h4" component="h6">
+          Corona Virus Tracker
+        </Typography>
+        <Grid container spacing={5}>
+          <Grid item xs={12} md={4}>
+            <Cards data={data} />
+          </Grid>
+          <Grid item xs={12} md={8}>
+            <Grid xs={12} md={12}>
+              <CountryPicker handleCountryChange={this.handleCountryChange} />
+            </Grid>
+            <Grid xs={12} md={12}>
+              <Chart data={data} country={country} />
+            </Grid>
+          </Grid>
+        </Grid>
       </div>
     );
   }
